@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv='Content-type' content='text/html; charset=utf-8'>
+    <title>Basic Example with React</title>
+    <style>
+      .selected {
+        background-color: #007fff;
+      }
+      .hidden {
+        display: none
+      }
+    </style>
+  </head>
+  <body>
+    <div id='content'>
+      If you see this, then react hasn't been initialized :(
+    </div>
+    <script src="react.js"></script>
+    <script src="JSXTransformer.js"></script>
+    <script type="text/jsx">
+      /**
+       * @jsx React.DOM
+       */
+      var sampleList = [
+        {name: "list_item1", title: "Tab 1", text: "This is the first list item"},
+        {name: "list_item2", title: "Tab 2", text: "This is the second list item"},
+        {name: "list_item3", title: "Tab 3", text: "This is the third list item"}
+      ];
+      var anotherList = [
+        {name: "list_item1", title: "Tab 1", text: "Hello world!"},
+        {name: "list_item2", title: "Tab 2", text: "Hey there, world!"},
+        {name: "list_item3", title: "Tab 3", text: "WHATUP, World?"}
+      ];
+      var ListOfStuff = React.createClass({
+        getInitialState: function() {
+          return {active: this.props.items[0].name};
+        },
+        changeItem: function(event) {
+          this.setState({
+            active: event.target.getAttribute('title')
+          });
+        },
+        render: function() {
+          var currentState = this.state;
+          var clickHandler = this.changeItem;
+          return <div><ul class="itemList">
+              {this.props.items.map(function(item){
+                var elem_class = "";
+                if (item.name === currentState.active) {
+                  elem_class = "selected";
+                }
+                  return <li onClick={clickHandler} class={elem_class} title={item.name}>{item.title}</li>
+              })}
+
+            </ul>
+            <div>
+              {this.props.items.map(function(item){
+                var elem_class = "hidden";
+                if (item.name === currentState.active) {
+                  elem_class = "visible";
+                }
+                  return <div class={elem_class}>{item.text}</div>
+              })}
+            </div>
+          </div>;
+        }
+      });
+      React.renderComponent(
+        <div>
+          <ListOfStuff items={sampleList} />
+          <ListOfStuff items={anotherList} />
+        </div>,
+        document.getElementById('content')
+      );
+    </script>
+  </body>
+</html>
